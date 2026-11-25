@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f2">
+  <title>Trail Notes | Washington Hiking Log</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #20342d;
+      --muted: #64736a;
+      --green: #2f664d;
+      --green-dark: #214b38;
+      --green-soft: #e8f0e9;
+      --line: #e2e8e1;
+      --paper: #ffffff;
+      --canvas: #f5f7f2;
+      --gold: #d7a64b;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--canvas);
+      line-height: 1.5;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px max(24px, calc((100% - 1120px) / 2)) 56px;
+      color: #fff;
+      background:
+        radial-gradient(ellipse at 82% 18%, rgb(213 224 173 / 20%), transparent 27%),
+        linear-gradient(118deg, #193c32 0%, #2d6048 56%, #66815a 100%);
+    }
+
+    .hero::after {
+      position: absolute;
+      right: -70px;
+      bottom: -180px;
+      width: 430px;
+      height: 330px;
+      border: 1px solid rgb(255 255 255 / 14%);
+      border-radius: 50%;
+      content: "";
+      box-shadow: 0 0 0 32px rgb(255 255 255 / 4%), 0 0 0 68px rgb(255 255 255 / 3%);
+      pointer-events: none;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #f3f5e9;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      border: 1px solid rgb(255 255 255 / 35%);
+      border-radius: 10px;
+      color: #f0d18a;
+      font-size: 17px;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 650px;
+      margin-top: 37px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: #e8d59e;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(36px, 6vw, 58px);
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.08;
+    }
+
+    .hero-copy > p:last-child {
+      max-width: 500px;
+      margin: 15px 0 0;
+      color: #e2e9df;
+      font-size: 16px;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+      width: min(1120px, calc(100% - 40px));
+      margin: -27px auto 48px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--paper);
+      box-shadow: 0 8px 26px rgb(36 57 43 / 5%);
+    }
+
+    .stat-card {
+      padding: 17px 20px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .stat-value {
+      display: block;
+      margin-top: 2px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 29px;
+      line-height: 1.2;
+    }
+
+    .stat-value small {
+      color: var(--muted);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .panel {
+      padding: 25px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 25px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    .section-heading p,
+    .form-note {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: minmax(190px, 1.6fr) minmax(110px, 0.7fr) minmax(145px, 0.9fr) minmax(170px, 1.1fr) auto;
+      align-items: end;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fbfcfa;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    label {
+      color: #43564a;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    input[type="text"],
+    input[type="search"],
+    input[type="number"],
+    input[type="date"],
+    input[type="file"],
+    select {
+      width: 100%;
+      min-width: 0;
+      height: 42px;
+      padding: 9px 10px;
+      border: 1px solid #d5ded4;
+      border-radius: 8px;
+      outline: none;
+      color: var(--ink);
+      background: #fff;
+      font-size: 13px;
+    }
+
+    input[type="file"] {
+      padding: 7px;
+    }
+
+    input:focus-visible,
+    select:focus-visible,
+    button:focus-visible {
+      outline: 3px solid rgb(57 119 83 / 28%);
+      outline-offset: 2px;
+    }
+
+    .primary-button,
+    .complete-button {
+      min-height: 42px;
+      padding: 9px 15px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: background 140ms ease, transform 140ms ease;
+    }
+
+    .primary-button {
+      color: #fff;
+      background: var(--green);
+      white-space: nowrap;
+    }
+
+    .primary-button:hover {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+    }
+
+    .secondary-button {
+      min-height: 42px;
+      padding: 8px 13px;
+      border: 1px solid #cfddd1;
+      border-radius: 8px;
+      color: var(--green-dark);
+      background: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .secondary-button:hover {
+      background: var(--green-soft);
+    }
+
+    .table-heading {
+      margin-top: 30px;
+    }
+
+    .filter-form {
+      grid-template-columns: minmax(200px, 1fr) auto auto;
+      max-width: 650px;
+      margin-bottom: 12px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .feedback {
+      min-height: 20px;
+      margin: 8px 0;
+      color: var(--green-dark);
+      font-size: 13px;
+    }
+
+    .feedback[data-state="error"] {
+      color: #a33b2e;
+    }
+
+    .entry-count {
+      flex: 0 0 auto;
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: var(--green-dark);
+      background: var(--green-soft);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th,
+    td {
+      padding: 13px 15px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    th {
+      color: #68786c;
+      background: #f8faf7;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    td {
+      font-size: 13px;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .hike-name {
+      min-width: 175px;
+      font-weight: 700;
+    }
+
+    .hike-region {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status::before {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      content: "";
+    }
+
+    .status-planned {
+      color: #825e19;
+      background: #fbf2da;
+    }
+
+    .status-completed {
+      color: #2f664d;
+      background: #e8f0e9;
+    }
+
+    .complete-button {
+      min-height: 32px;
+      padding: 6px 9px;
+      border: 1px solid #cfddd1;
+      color: var(--green-dark);
+      background: #fff;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .complete-button:hover:not(:disabled) {
+      background: var(--green-soft);
+    }
+
+    .complete-button:disabled {
+      border-color: transparent;
+      color: #718078;
+      background: #f2f5f1;
+      cursor: default;
+    }
+
+    .photo-thumb {
+      width: 36px;
+      height: 30px;
+      border-radius: 5px;
+      object-fit: cover;
+      vertical-align: middle;
+    }
+
+    .no-photo {
+      color: #8b978d;
+      font-size: 12px;
+    }
+
+    .photo-note {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 850px) {
+      form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      form .primary-button {
+        align-self: end;
+      }
+
+      .filter-form {
+        grid-template-columns: minmax(160px, 1fr) auto auto;
+      }
+
+      .table-wrap {
+        margin-right: -1px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero {
+        padding: 22px 22px 48px;
+      }
+
+      .hero-copy {
+        margin-top: 28px;
+      }
+
+      main {
+        width: min(100% - 24px, 1120px);
+        margin-top: -22px;
+      }
+
+      .stats {
+        gap: 8px;
+      }
+
+      .stat-card {
+        padding: 13px 11px;
+      }
+
+      .stat-label {
+        font-size: 11px;
+      }
+
+      .stat-value {
+        font-size: 24px;
+      }
+
+      .panel {
+        padding: 18px 14px;
+      }
+
+      form {
+        grid-template-columns: 1fr;
+        padding: 14px;
+      }
+
+      .filter-form {
+        grid-template-columns: 1fr auto;
+      }
+
+      .filter-form .field {
+        grid-column: 1 / -1;
+      }
+
+      .section-heading {
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">⌁</span> Trail Notes</div>
+    <div class="hero-copy">
+      <p class="eyebrow">Your Washington hiking log</p>
+      <h1>Make room for<br>the next trail.</h1>
+      <p>Keep a little record of where you’ve wandered, the miles behind you, and the hikes still calling.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="stats" aria-label="Hiking summary">
+      <article class="stat-card">
+        <span class="stat-label">Hikes completed</span>
+        <strong class="stat-value" id="completed-count">0</strong>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">Miles walked</span>
+        <strong class="stat-value"><span id="miles-total">0</span> <small>mi</small></strong>
+      </article>
+      <article class="stat-card">
+        <span class="stat-label">Still to explore</span>
+        <strong class="stat-value" id="planned-count">0</strong>
+      </article>
+    </section>
+
+    <section class="panel" aria-labelledby="log-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="log-heading">Your trail log</h2>
+          <p>Plan a hike or add one you’ve already completed.</p>
+        </div>
+      </div>
+
+      <form id="hike-form">
+        <div class="field">
+          <label for="hike-name">Hike name</label>
+          <select id="hike-name" name="trailId" required>
+            <option value="">Loading trails…</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="hike-miles">Distance (miles)</label>
+          <input id="hike-miles" name="miles" type="number" min="0.1" max="200" step="0.1" placeholder="Choose a trail" required>
+        </div>
+        <div class="field">
+          <label for="hike-date">Hike date</label>
+          <input id="hike-date" name="hikeDate" type="date" required>
+        </div>
+        <div class="field">
+          <label for="hike-photo">Photo (optional)</label>
+          <input id="hike-photo" name="photo" type="file" accept="image/*">
+        </div>
+        <button class="primary-button" type="submit">＋ Add hike</button>
+      </form>
+      <p class="form-note">Choose a trail and schedule date. You can attach a photo up to 2 MB.</p>
+
+      <div class="section-heading table-heading">
+        <div>
+          <h2>Recent &amp; upcoming</h2>
+          <p>Your finished miles and the paths on your list.</p>
+        </div>
+        <span class="entry-count" id="entry-count">0 hikes</span>
+      </div>
+      <form class="filter-form" id="search-form">
+        <div class="field">
+          <label for="search-input">Find a hike by name or region</label>
+          <input id="search-input" type="search" maxlength="100" placeholder="Try “North Bend”">
+        </div>
+        <button class="primary-button" type="submit">Search</button>
+        <button class="secondary-button" id="clear-search" type="button">Show all</button>
+      </form>
+      <p class="feedback" id="app-message" role="status" aria-live="polite"></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Hike</th>
+              <th scope="col">Distance</th>
+              <th scope="col">Date</th>
+              <th scope="col">Status</th>
+              <th scope="col">Photo</th>
+              <th scope="col">Update</th>
+            </tr>
+          </thead>
+          <tbody id="hike-rows"></tbody>
+        </table>
+      </div>
+      <p class="photo-note">Your hike entries and attached photos are saved in your project database.</p>
+    </section>
+  </main>
+
+  <script>
+    const rows = document.getElementById("hike-rows");
+    const form = document.getElementById("hike-form");
+    const trailSelect = document.getElementById("hike-name");
+    const milesInput = document.getElementById("hike-miles");
+    const dateInput = document.getElementById("hike-date");
+    const searchForm = document.getElementById("search-form");
+    const searchInput = document.getElementById("search-input");
+    const appMessage = document.getElementById("app-message");
+    const maxPhotoBytes = 2 * 1024 * 1024;
+    const photoTypes = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+
+    function todayAsInputDate() {
+      const today = new Date();
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const day = String(today.getDate()).padStart(2, "0");
+      return `${today.getFullYear()}-${month}-${day}`;
+    }
+
+    function formatDate(date) {
+      if (!date) return "—";
+      const [year, month, day] = String(date).slice(0, 10).split("-").map(Number);
+      return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" })
+        .format(new Date(year, month - 1, day));
+    }
+
+    function showMessage(message, state) {
+      appMessage.textContent = message;
+      appMessage.dataset.state = state || "";
+    }
+
+    async function fetchJson(url, options) {
+      const response = await fetch(url, options);
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "The request could not be completed.");
+      return result;
+    }
+
+    async function loadTrails() {
+      const trails = await fetchJson("/api/trails");
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Choose a trail…";
+      trailSelect.replaceChildren(placeholder);
+
+      trails.forEach((trail) => {
+        const option = document.createElement("option");
+        option.value = trail.TrailId;
+        option.dataset.miles = trail.Miles;
+        option.textContent = `${trail.Name} · ${trail.Region} · ${Number(trail.Miles).toFixed(1)} mi`;
+        trailSelect.append(option);
+      });
+
+      trailSelect.disabled = trails.length === 0;
+      if (trails.length === 0) {
+        showMessage("No trails are loaded yet. Run the database loader from the project instructions.", "error");
+      }
+    }
+
+    function renderHikes(hikes, summary) {
+      rows.replaceChildren();
+
+      hikes.forEach((hike) => {
+        const row = document.createElement("tr");
+        const hikeCell = document.createElement("td");
+        const name = document.createElement("span");
+        const region = document.createElement("span");
+        hikeCell.className = "hike-name";
+        name.textContent = hike.Name;
+        region.className = "hike-region";
+        region.textContent = hike.Region;
+        hikeCell.append(name, region);
+
+        const distanceCell = document.createElement("td");
+        distanceCell.textContent = `${Number(hike.Miles).toFixed(1)} mi`;
+
+        const dateCell = document.createElement("td");
+        dateCell.textContent = formatDate(hike.HikeDate);
+
+        const statusCell = document.createElement("td");
+        const status = document.createElement("span");
+        status.className = `status status-${hike.Status.toLowerCase()}`;
+        status.textContent = hike.Status;
+        statusCell.append(status);
+
+        const photoCell = document.createElement("td");
+        if (hike.PhotoUrl) {
+          const image = document.createElement("img");
+          image.className = "photo-thumb";
+          image.src = hike.PhotoUrl;
+          image.alt = `Photo for ${hike.Name}`;
+          photoCell.append(image);
+        } else {
+          const noPhoto = document.createElement("span");
+          noPhoto.className = "no-photo";
+          noPhoto.textContent = "—";
+          photoCell.append(noPhoto);
+        }
+
+        const actionCell = document.createElement("td");
+        const button = document.createElement("button");
+        button.className = "complete-button";
+        button.type = "button";
+        button.dataset.hikeId = hike.HikeLogId;
+        button.textContent = hike.Status === "Completed" ? "Done" : "Mark done";
+        button.disabled = hike.Status === "Completed";
+        button.setAttribute("aria-label", hike.Status === "Completed" ? `${hike.Name} is complete` : `Mark ${hike.Name} complete`);
+        actionCell.append(button);
+        row.append(hikeCell, distanceCell, dateCell, statusCell, photoCell, actionCell);
+        rows.append(row);
+      });
+
+      if (hikes.length === 0) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 6;
+        cell.textContent = "No hikes match your search.";
+        row.append(cell);
+        rows.append(row);
+      }
+
+      document.getElementById("completed-count").textContent = summary.CompletedCount;
+      document.getElementById("miles-total").textContent = Number(summary.MilesWalked).toFixed(1);
+      document.getElementById("planned-count").textContent = summary.PlannedCount;
+      document.getElementById("entry-count").textContent = `${hikes.length} ${hikes.length === 1 ? "hike" : "hikes"}`;
+    }
+
+    async function loadHikes(search) {
+      const result = await fetchJson(`/api/hikes?search=${encodeURIComponent(search || "")}`);
+      renderHikes(result.hikes, result.summary);
+    }
+
+    function readPhoto(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+          const dataUrl = String(reader.result);
+          const separator = dataUrl.indexOf(",");
+          if (separator < 0) {
+            reject(new Error("The selected photo could not be read."));
+            return;
+          }
+          resolve({
+            photoData: dataUrl.slice(separator + 1),
+            photoContentType: file.type
+          });
+        });
+        reader.addEventListener("error", () => reject(new Error("The selected photo could not be read.")));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    trailSelect.addEventListener("change", () => {
+      const selectedTrail = trailSelect.selectedOptions[0];
+      milesInput.value = selectedTrail && selectedTrail.dataset.miles
+        ? Number(selectedTrail.dataset.miles).toFixed(1)
+        : "";
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const submitButton = form.querySelector('button[type="submit"]');
+      const photoFile = form.elements.photo.files[0];
+      if (photoFile && photoFile.size > maxPhotoBytes) {
+        showMessage("Choose a photo that is 2 MB or smaller.", "error");
+        return;
+      }
+      if (photoFile && !photoTypes.has(photoFile.type)) {
+        showMessage("Choose a JPEG, PNG, WebP, or GIF photo.", "error");
+        return;
+      }
+
+      submitButton.disabled = true;
+      showMessage("Saving your hike…");
+      try {
+        const photo = photoFile ? await readPhoto(photoFile) : { photoData: null, photoContentType: null };
+        await fetchJson("/api/hikes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            trailId: Number(trailSelect.value),
+            miles: Number(milesInput.value),
+            scheduledDate: dateInput.value,
+            ...photo
+          })
+        });
+        form.reset();
+        dateInput.value = todayAsInputDate();
+        milesInput.value = "";
+        await loadHikes(searchInput.value.trim());
+        showMessage("Hike added to your log.", "success");
+      } catch (error) {
+        showMessage(error.message, "error");
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+
+    searchForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      try {
+        await loadHikes(searchInput.value.trim());
+        showMessage("");
+      } catch (error) {
+        showMessage(error.message, "error");
+      }
+    });
+
+    document.getElementById("clear-search").addEventListener("click", async () => {
+      searchInput.value = "";
+      try {
+        await loadHikes("");
+        showMessage("");
+      } catch (error) {
+        showMessage(error.message, "error");
+      }
+    });
+
+    rows.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-hike-id]");
+      if (!button) return;
+      button.disabled = true;
+      try {
+        await fetchJson(`/api/hikes/${button.dataset.hikeId}/complete`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ completedDate: todayAsInputDate() })
+        });
+        await loadHikes(searchInput.value.trim());
+        showMessage("Hike marked complete.", "success");
+      } catch (error) {
+        showMessage(error.message, "error");
+        button.disabled = false;
+      }
+    });
+
+    dateInput.value = todayAsInputDate();
+    Promise.all([loadTrails(), loadHikes("")]).catch((error) => {
+      showMessage(error.message, "error");
+    });
+  </script>
+</body>
+</html>
